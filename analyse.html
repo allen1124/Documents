@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <title>Chinese Corpus</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="src/bootstrap.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="src/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="src/dashboard.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="src/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Chinese Corpus</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="index.html">Dashboard</a></li>
+            <li><a href="analyse.html">九級字表分析</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">Help</a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <input class="form-control" placeholder="Search..." type="text">
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li><a href="#">Overview</a></li>
+            <li><a href="#">Reports</a></li>
+            <li class="active"><a href="#">九級字表分析</a></li>
+            <li><a href="#">Export</a></li>
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">九級字表分析</h1>
+          <ul class="nav nav-tabs">
+            <li role="presentation" class="active"><a href="#">Input</a></li>
+            <li role="presentation" class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                Import <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a>.pdf</a></li>
+                  <li><a>.docx</a></li>
+              </ul>
+            </li>
+          </ul>
+          <form id="form" method="post">
+          <div class="form-group">
+          <br>
+          <textarea class="form-control" name="input" id="input" rows="3"></textarea>
+          </div>
+  <!--<div class="form-group">
+    <label for="exampleInputFile">File input</label>
+    <input type="file" class="form-control-file" id="exampleInputFile" aria-describedby="fileHelp">
+    <small id="fileHelp" class="form-text text-muted">This is some placeholder block-level help text for the above input. It's a bit lighter and easily wraps to a new line.</small>
+  </div>-->
+          <button class="btn btn-warning"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" aria-hidden="true"></span> Loading...</button>
+          <button type="submit" class="btn btn-primary">Reset</button>
+          </form>
+          <div id="result" style="display: none">
+            <h2 class="sub-header">分析結果</h2>
+            <div id="count"></div>
+            <div class="table-responsive" id="table"></div>
+          </div>
+        </div>
+      </div>  
+    </div>
+    
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <script src="src/jquery.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="src/bootstrap.js"></script>
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="src/ie10-viewport-bug-workaround.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+    <script>
+      if (sessionStorage.getItem("username")!= CryptoJS.MD5("admin").toString()){
+        window.location.href = 'login.html';
+      };
+    </script>
+    <script>
+
+
+    $('#input').keyup(function(){
+      var dataInput = $('#input').val();
+      console.log(dataInput);
+      //$("#result").css({"display": "block"});
+      $.ajax({
+        url: 'filter.php',
+        type: 'POST',
+        data: "input="+ dataInput,
+        dataType: "json",
+        success: function(data){
+          //alert("ihh");
+          //console.log(JSON.stringify(data));
+          //console.log(JSON.stringify(data['count']));
+          $("#result").css({"display": "block"});
+          $("#count").empty();
+          $("#table").empty();
+          var count= "";
+          count ="<h4>不重複字： "+data.count+"</h4>";
+          console.log(data.total);
+          $("#count").append(count);
+
+          var text = "";
+          if (data.p1 != null){
+            text += "<h4><strong>小一級</strong></h4>";
+            text += "<table class='table table-striped'><thead><tr><th>字形</th><th>部件/單字</th><th>難度</th><th>筆畫</th><th>常用度</th></tr></thead><tbody>";
+            for(var i in data.p1 ){
+              text +="<tr>";
+                text +="<td>" + data.p1[i].word+"</td>";
+                text +="<td>" + data.p1[i].type+"</td>";
+                text +="<td>" + data.p1[i].difficulty+"</td>";
+                text +="<td>" + data.p1[i].stroke+"</td>";
+                text +="<td>" + data.p1[i].frequency+"</td>";
+              text +="</tr>";
+
+            }
+            text +="</tbody> </table>";
+            text +="<h5>共"+data.p1.length+"個</h5></br>";
+          }
+          if (data.p2 != null){
+            text += "<h4><strong>小二級</strong></h4>";
+            text += "<table class='table table-striped'><thead><tr><th>字形</th><th>部件/單字</th><th>難度</th><th>筆畫</th><th>常用度</th></tr></thead><tbody>";
+            for(var i in data.p2 ){
+              text +="<tr>";
+                text +="<td>" + data.p2[i].word+"</td>";
+                text +="<td>" + data.p2[i].type+"</td>";
+                text +="<td>" + data.p2[i].difficulty+"</td>";
+                text +="<td>" + data.p2[i].stroke+"</td>";
+                text +="<td>" + data.p2[i].frequency+"</td>";
+              text +="</tr>";
+
+            }
+            text +="</tbody> </table>";
+            text +="<h5>共"+data.p2.length+"個</h5></br>";
+          }
+          if (data.p3 != null){
+            text += "<h4><strong>小三級</strong></h4>";
+            text += "<table class='table table-striped'><thead><tr><th>字形</th><th>部件/單字</th><th>難度</th><th>筆畫</th><th>常用度</th></tr></thead><tbody>";
+            for(var i in data.p3 ){
+              text +="<tr>";
+                text +="<td>" + data.p3[i].word+"</td>";
+                text +="<td>" + data.p3[i].type+"</td>";
+                text +="<td>" + data.p3[i].difficulty+"</td>";
+                text +="<td>" + data.p3[i].stroke+"</td>";
+                text +="<td>" + data.p3[i].frequency+"</td>";
+              text +="</tr>";
+
+            }
+            text +="</tbody> </table>";
+            text +="<h5>共"+data.p3.length+"個</h5></br>";
+          }
+          if (data.p4 != null){
+            text += "<h4><strong>小四級</strong></h4>";
+            text += "<table class='table table-striped'><thead><tr><th>字形</th><th>部件/單字</th><th>難度</th><th>筆畫</th><th>常用度</th></tr></thead><tbody>";
+            for(var i in data.p4 ){
+              text +="<tr>";
+                text +="<td>" + data.p4[i].word+"</td>";
+                text +="<td>" + data.p4[i].type+"</td>";
+                text +="<td>" + data.p4[i].difficulty+"</td>";
+                text +="<td>" + data.p4[i].stroke+"</td>";
+                text +="<td>" + data.p4[i].frequency+"</td>";
+              text +="</tr>";
+
+            }
+            text +="</tbody> </table>";
+            text +="<h5>共"+data.p4.length+"個</h5></br>";
+          }
+          if (data.p5 != null){
+            text += "<h4><strong>小五級</strong></h4>";
+            text += "<table class='table table-striped'><thead><tr><th>字形</th><th>部件/單字</th><th>難度</th><th>筆畫</th><th>常用度</th></tr></thead><tbody>";
+            for(var i in data.p5 ){
+              text +="<tr>";
+                text +="<td>" + data.p5[i].word+"</td>";
+                text +="<td>" + data.p5[i].type+"</td>";
+                text +="<td>" + data.p5[i].difficulty+"</td>";
+                text +="<td>" + data.p5[i].stroke+"</td>";
+                text +="<td>" + data.p5[i].frequency+"</td>";
+              text +="</tr>";
+
+            }
+            text +="</tbody> </table>";
+            text +="<h5>共"+data.p5.length+"個</h5></br>";
+          }
+          if (data.p6 != null){
+            text += "<h4><strong>小六級</strong></h4>";
+            text += "<table class='table table-striped'><thead><tr><th>字形</th><th>部件/單字</th><th>難度</th><th>筆畫</th><th>常用度</th></tr></thead><tbody>";
+            for(var i in data.p6 ){
+              text +="<tr>";
+                text +="<td>" + data.p6[i].word+"</td>";
+                text +="<td>" + data.p6[i].type+"</td>";
+                text +="<td>" + data.p6[i].difficulty+"</td>";
+                text +="<td>" + data.p6[i].stroke+"</td>";
+                text +="<td>" + data.p6[i].frequency+"</td>";
+              text +="</tr>";
+
+            }
+            text +="</tbody> </table>";
+            text +="<h5>共"+data.p6.length+"個</h5></br>";
+          }
+          if (data.p7 != null){
+            text += "<h4><strong>中一級</strong></h4>";
+            text += "<table class='table table-striped'><thead><tr><th>字形</th><th>部件/單字</th><th>難度</th><th>筆畫</th><th>常用度</th></tr></thead><tbody>";
+            for(var i in data.p7 ){
+              text +="<tr>";
+                text +="<td>" + data.p7[i].word+"</td>";
+                text +="<td>" + data.p7[i].type+"</td>";
+                text +="<td>" + data.p7[i].difficulty+"</td>";
+                text +="<td>" + data.p7[i].stroke+"</td>";
+                text +="<td>" + data.p7[i].frequency+"</td>";
+              text +="</tr>";
+
+            }
+            text +="</tbody> </table>";
+            text +="<h5>共"+data.p7.length+"個</h5></br>";
+          }
+          if (data.p8 != null){
+            text += "<h4><strong>中二級</strong></h4>";
+            text += "<table class='table table-striped'><thead><tr><th>字形</th><th>部件/單字</th><th>難度</th><th>筆畫</th><th>常用度</th></tr></thead><tbody>";
+            for(var i in data.p8 ){
+              text +="<tr>";
+                text +="<td>" + data.p8[i].word+"</td>";
+                text +="<td>" + data.p8[i].type+"</td>";
+                text +="<td>" + data.p8[i].difficulty+"</td>";
+                text +="<td>" + data.p8[i].stroke+"</td>";
+                text +="<td>" + data.p8[i].frequency+"</td>";
+              text +="</tr>";
+
+            }
+            text +="</tbody> </table>";
+            text +="<h5>共"+data.p8.length+"個</h5></br>";
+          }
+          if (data.p9 != null){
+            text += "<h4><strong>中三級</strong></h4>";
+            text += "<table class='table table-striped'><thead><tr><th>字形</th><th>部件/單字</th><th>難度</th><th>筆畫</th><th>常用度</th></tr></thead><tbody>";
+            for(var i in data.p9 ){
+              text +="<tr>";
+                text +="<td>" + data.p9[i].word+"</td>";
+                text +="<td>" + data.p9[i].type+"</td>";
+                text +="<td>" + data.p9[i].difficulty+"</td>";
+                text +="<td>" + data.p9[i].stroke+"</td>";
+                text +="<td>" + data.p9[i].frequency+"</td>";
+              text +="</tr>";
+
+            }
+            text +="</tbody> </table>";
+            text +="<h5>共"+data.p9.length+"個</h5></br>";
+          }
+          $("#table").append(text);
+        },
+        
+      });
+    });
+
+
+
+
+
+
+
+
+    </script>
+
+
+
+</body></html>
