@@ -296,15 +296,15 @@
             username: $("#usernameU").val(),
             pwd: $("#pwdU").val(),
 
-          },
-          dataType: "json",
-          success: function(data){
-            console.log(data);
-            $("#editAccount").modal('toggle');
-            //location.reload();
-          }
-        })
-      })
+              },
+              dataType: "json",
+              success: function(data){
+//              console.log(data);
+//              $("#editAccount").modal('toggle');
+                location.reload();
+              }
+            })
+          })
       });
     </script>
 

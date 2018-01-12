@@ -91,24 +91,24 @@
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>cname</th>
-                  <th>ename</th>
-                  <th>district</th>
-                  <th>noOfGroup</th>
-                  <th>edit</th>
+                  <th>Chinese Name</th>
+                  <th>English Name</th>
+                  <th>District</th>
+                  <th>No Of Group</th>
+                  <th>Edit</th>
                 </tr>
               </thead>
               <tbody>
               <?
                   while ($centreArr = mysqli_fetch_assoc($mysql)) {
-                    echo '<tr value="'.$centreArr['cid'].'">
-                  <td>'.$centreArr['cid'].'</td>
-                  <td>'.$centreArr['cname'].'</td>
-                  <td>'.$centreArr['ename'].'</td>
-                  <td>'.$centreArr['district'].'</td>
-                  <td>'.$centreArr['group'].'</td>
-                  <td>
-                  <button type="button" class = "btn btn-link" data-toggle="modal" data-target="#editCentre" data-id="'.$centreArr['cid'].'"><span class="glyphicon glyphicon-pencil" aria-hidden="true" ></span>
+                    echo ' 
+                      <td class="fire" value="'.$centreArr['cid'].'">'.$centreArr['cid'].'</td>
+                      <td class="fire" value="'.$centreArr['cid'].'">'.$centreArr['cname'].'</td>
+                      <td class="fire" value="'.$centreArr['cid'].'">'.$centreArr['ename'].'</td>
+                      <td class="fire" value="'.$centreArr['cid'].'">'.$centreArr['district'].'</td>
+                      <td class="fire" value="'.$centreArr['cid'].'">'.$centreArr['group'].'</td>
+                    
+                  <td><button type="button" class = "btn btn-link" data-toggle="modal" data-target="#editCentre" data-id="'.$centreArr['cid'].'"><span class="glyphicon glyphicon-pencil" aria-hidden="true" ></span>
                   </button></td>
                 </tr>';
 
@@ -156,7 +156,7 @@
       <option value="SK">SK</option>
       <option value="ST">ST</option>
       <option value="SOU">SOU</option>
-      <option value="SS{">SSP</option>
+      <option value="SSP">SSP</option>
       <option value="TM">TM</option>
       <option value="TP">TP</option>
       <option value="WC">WC</option>
@@ -189,10 +189,11 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="formModalLabel">Edit Centre/School <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button></h4>
-        
+        <h4 class="modal-title" id="formModalLabel">Edit Centre/School
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </h4>
       </div>
       <div class="modal-body">
       <form>
@@ -237,8 +238,8 @@
 </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button id="update" type=submit" class="btn btn-primary">Save changes</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" id="update" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>
@@ -279,14 +280,14 @@
       
       var modal = $("#editCentre").attr('aria-hidden');
       if (modal){
-        
-          $('.table > tbody > tr').click(function(){
-            //row was clicked
-            var rowID = $(this).attr('value');
-            console.log("Centre " + rowID + " was clicked");
-            window.location = "group.php?id=" + rowID; 
-          });
+           $('.table > tbody > tr > .fire').click(function () {
+                  //row was clicked
+                  var rowID = $(this).attr('value');
+                  console.log("Centre " + rowID + " was clicked");
+                  window.location = "group.php?id=" + rowID;
+           })
       }
+
       $("#editCentre").on('show.bs.modal', function(e){
         var centreID = $(e.relatedTarget).data('id');
         console.log(centreID);
@@ -310,24 +311,23 @@
         })
         $("#update").click(function(e){
           //console.log($("#cnameU").val());
-        $.ajax({
-          type: "POST",
-          url: "centre_update_action.php",
-          data: {
-            cid: centreID,
-            cname: $("#cnameU").val(),
-            ename: $("#enameU").val(),
-            district: $("#districtU").val(),
-            noOfClass: $("#noOfClassU").val(),
-            noOfGroup: $("#noOfGroupU").val(),
-
-          },
-          dataType: "json",
-          success: function(data){
-            console.log(data);
-            $("#editCentre").modal('toggle');
-            location.reload();
-          }
+            $.ajax({
+              type: "POST",
+              url: "centre_update_action.php",
+              data: {
+                cid: centreID,
+                cname: $("#cnameU").val(),
+                ename: $("#enameU").val(),
+                district: $("#districtU").val(),
+                noOfClass: $("#noOfClassU").val(),
+                noOfGroup: $("#noOfGroupU").val(),
+              },
+              dataType: "json",
+              success: function(data){
+    //            console.log(data);
+    //            $("#editCentre").modal('toggle');
+                location.reload();
+              }
         })
       })
       });
