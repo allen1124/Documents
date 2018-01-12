@@ -115,13 +115,13 @@
                     $tsql = "SELECT * FROM cllsc.account WHERE username = '$tid';";
                     $tName = mysqli_query($conn, $tsql);
                     $tutorName = mysqli_fetch_assoc($tName);
-                    echo '<tr value="'.$infoArr['gid'].'">
-                  <td>'.$infoArr['cid'].'</td>
-                  <td>'.$schoolName['cname'].'</td>
-                  <td>'.$infoArr['enroll'].'</td>
-                  <td>'.$infoArr['venue'].'</td>
-                  <td>'.$tutorName['cname'].'老師</td>
-                  <td>'.$infoArr['time'].'</td>
+                    echo '<tr>
+                  <td class="g" value="'.$infoArr['gid'].'">'.$infoArr['cid'].'</td>
+                  <td class="g" value="'.$infoArr['gid'].'">'.$schoolName['cname'].'</td>
+                  <td class="g" value="'.$infoArr['gid'].'">'.$infoArr['enroll'].'</td>
+                  <td class="g" value="'.$infoArr['gid'].'">'.$infoArr['venue'].'</td>
+                  <td class="g" value="'.$infoArr['gid'].'">'.$tutorName['cname'].'老師</td>
+                  <td class="g" value="'.$infoArr['gid'].'">'.$infoArr['time'].'</td>
                   <td>
                   <button type="button" class = "btn btn-link" data-toggle="modal" data-target="#editGroup" data-id="'.$infoArr['gid'].'"><span class="glyphicon glyphicon-pencil" aria-hidden="true" ></span>
                   </button></td>
@@ -305,8 +305,8 @@
           }
         })
       });
-    	//TO-DO
-      $('.table > tbody > tr').click(function(){
+
+      $('.table > tbody > tr > .g').click(function(){
     		//row was clicked
     		var rowID = $(this).attr('value');
     		//console.log("row " + rowID + " was clicked");
@@ -349,8 +349,8 @@
           },
           dataType: "json",
           success: function(data){
-            console.log(data);
-            $("#editGroup").modal('toggle');
+//            console.log(data);
+//            $("#editGroup").modal('toggle');
             location.reload();
           }
         })
