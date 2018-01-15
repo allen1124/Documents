@@ -96,13 +96,13 @@
               <thead>
                 <tr>
                   <th>Profile</th>
-                  <th>cname</th>
-                  <th>ename</th>
+                  <th>Chinese name</th>
+                  <th>English name</th>
                   <th>Gender</th>
                   <th>Class</th>
                   <th>Class No.</th>
                   <th>School</th>
-                  <th>gid</th>
+                  <th>Grp ID</th>
                   <th>Edit</th>
                 </tr>
               </thead>
@@ -123,7 +123,7 @@
                   <td>'.$infoArr['school'].'</td>
                   <td>'.$infoArr['gid'].'</td>
                   <td>
-                  <button type="button" class = "btn btn-link" data-toggle="modal" data-target="#editCentre"><span class="glyphicon glyphicon-pencil" aria-hidden="true" ></span>
+                  <button type="button" class = "btn btn-link" data-toggle="modal" data-target="#editStudent"><span class="glyphicon glyphicon-pencil" aria-hidden="true" ></span>
                   </button></td>
                 </tr>';
 
@@ -224,11 +224,11 @@
 
 
 
-<div class="modal fade" id="addProfile" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+<div class="modal fade" id="editStudent" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="formModalLabel">Language Background Profile<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <h4 class="modal-title" id="formModalLabel">Edit Student<button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button></h4>
         
@@ -237,16 +237,16 @@
        <form>
        <div class="form-group">
     <label for="cname">姓名 (中文)</label>
-    <input type="text" class="form-control" id="cname" aria-describedby="emailHelp" placeholder="輸入中文姓名">
+    <input type="text" class="form-control" id="cnameU" aria-describedby="emailHelp" placeholder="輸入中文姓名">
   </div>
   <div class="form-group">
     <label for="ename">姓名 (英文)</label>
-    <input type="text" class="form-control" id="ename" aria-describedby="emailHelp" placeholder="Enter the student's name">
+    <input type="text" class="form-control" id="enameU" aria-describedby="emailHelp" placeholder="Enter the student's name">
   </div>
   
   <div class="form-group">
     <label for="gender">Gender</label>
-    <select class="form-control" id="gender">
+    <select class="form-control" id="genderU">
       <option>-- Gender --</option>
       <option value="M">M</option>
       <option value="F">F</option>
@@ -254,20 +254,20 @@
   </div>
   <div class="form-group">
     <label for="class">班別</label>
-    <input type="text" class="form-control" id="class" aria-describedby="emailHelp" placeholder="Enter the class">
+    <input type="text" class="form-control" id="classU" aria-describedby="emailHelp" placeholder="Enter the class">
   </div>
   <div class="form-group">
     <label for="classNo">班號</label>
-    <input type="text" class="form-control" id="classNo" aria-describedby="emailHelp" placeholder="Enter the class number">
+    <input type="text" class="form-control" id="classNoU" aria-describedby="emailHelp" placeholder="Enter the class number">
   </div>
   <div class="form-group">
     <label for="school">學校</label>
-    <input type="text" class="form-control" id="school" aria-describedby="emailHelp" placeholder="Enter the school name">
+    <input type="text" class="form-control" id="schoolU" aria-describedby="emailHelp" placeholder="Enter the school name">
   </div>
 
   <div class="form-group">
     <label for="centre">中心</label>
-    <select class="form-control" id="centre">
+    <select class="form-control" id="centreU">
       <option>Centre/School</option>
       <?
         $centreSql = mysqli_query($conn, "SELECT * FROM cllsc.centre_list;");
@@ -284,7 +284,7 @@
 
   <div class="form-group">
     <label for="group">組別</label>
-    <select class="form-control" id="group">
+    <select class="form-control" id="groupU">
       <option>Group</option>
       <?
         $groupSql = mysqli_query($conn, "SELECT * FROM cllsc.group_list;");
@@ -303,7 +303,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" id="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" id="update" class="btn btn-primary">Submit</button>
       </div>
     </div>
   </div>
@@ -349,13 +349,58 @@
           }
         })
       });
-    	$('.table > tbody > tr').click(function(){
-    		//row was clicked
-    		var rowID = $(this).attr('value');
-    		console.log("row " + rowID + " was clicked");
-        $("#addProfile").modal('toggle');
-    		
-    	});
+
+    var modal = $("#editStudent").attr('aria-hidden');
+    var id;
+    if (modal){
+        $('.table > tbody > tr').click(function(){
+            id = $(this).attr('value');
+        });
+    }
+    $("#editStudent").on('show.bs.modal', function(e){
+        console.log(id);
+        $.ajax({
+            type: "POST",
+            url: "student_get_action.php",
+            data: {
+                sid: id
+            },
+            dataType: "json",
+            success: function(data){
+                console.log(data);
+                $(e.currentTarget).find('input[id="cnameU"]').val(data.cname);
+                $(e.currentTarget).find('input[id="enameU"]').val(data.ename);
+                $(e.currentTarget).find('select[id="genderU"]').val(data.gender);
+                $(e.currentTarget).find('input[id="classU"]').val(data.class);
+                $(e.currentTarget).find('input[id="classNoU"]').val(data.classNo);
+                $(e.currentTarget).find('input[id="schoolU"]').val(data.school);
+                $(e.currentTarget).find('select[id="centreU"]').val(data.centre);
+                $(e.currentTarget).find('select[id="groupU"]').val(data.group);
+            }
+        })
+
+        $("#update").click(function(e){
+            $.ajax({
+                type: "POST",
+                url: "student_update_action.php",
+                data: {
+                    id: id,
+                    cname: $("#cnameU").val(),
+                    ename: $("#enameU").val(),
+                    gender: $("#genderU").val(),
+                    class: $("#classU").val(),
+                    classNo: $("#classNoU").val(),
+                    school: $("#schoolU").val(),
+                    group: $("#groupU").val()
+                },
+                dataType: "json",
+                success: function(data){
+//                    $("#editStudent").modal('toggle');
+                    location.reload();
+                }
+            })
+        })
+    });
     </script>
 
 
