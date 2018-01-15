@@ -210,6 +210,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" id="delete" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
         <button type="button" id="update" class="btn btn-primary">Save changes</button>
       </div>
     </div>
@@ -304,6 +305,20 @@
                 location.reload();
               }
             })
+          })
+
+          $("#delete").click(function(e){
+              $.ajax({
+                  type: "POST",
+                  url: "account_delete_action.php",
+                  data: {
+                      id: id,
+                  },
+                  dataType: "json",
+                  success: function(data){
+                      location.reload();
+                  }
+              })
           })
       });
     </script>
