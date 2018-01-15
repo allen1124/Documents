@@ -302,8 +302,9 @@
 </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" id="update" class="btn btn-primary">Submit</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" id="delete" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+          <button type="submit" id="update" class="btn btn-primary">Submit</button>
       </div>
     </div>
   </div>
@@ -396,6 +397,20 @@
                 dataType: "json",
                 success: function(data){
 //                    $("#editStudent").modal('toggle');
+                    location.reload();
+                }
+            })
+        })
+
+        $("#delete").click(function(e){
+            $.ajax({
+                type: "POST",
+                url: "student_delete_action.php",
+                data: {
+                    id: id,
+                },
+                dataType: "json",
+                success: function(data){
                     location.reload();
                 }
             })
