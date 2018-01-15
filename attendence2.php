@@ -62,15 +62,14 @@
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="#">SSP Information System</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#">Attendence</a></li>
-            <li><a href="group.php?tid=<?$tid?>">Group List</a></li>
-            <li><a href="student.php">Student List</a></li>
+            <li><a href="group2.php?tid=<? echo $tid; ?>">Group List</a></li>
+            <li><a href="../login/logout.php"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
           </ul>
           <form class="navbar-form navbar-right">
             <input class="form-control" placeholder="Search..." type="text">
@@ -84,17 +83,12 @@
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
             <li class="active"><a href="#">Attendence</a></li>
-            <li ><a href="group.php">Group List</a></li>
-            <li><a href="student.php">Student List</a></li>
+            <li ><a href="group2.php?tid=<? echo $tid; ?>">Group List</a></li>
           </ul>
 
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h3 class="page-header">Group Attendence&nbsp&nbsp&nbsp
-            <button type="button" class = "btn btn-link" data-toggle="modal" data-target="#addStudent">
-              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-            </button>
-          </h3>
+          <h3 class="page-header">Group Attendence</h3>
           <?  
               $cid = $infoArr['cid'];
               $sql = "SELECT * FROM cllsc.centre_list WHERE cid = '$cid';";
@@ -174,112 +168,6 @@
       </div>
     </div>
     <!-- Modal -->
-<div class="modal fade" id="addStudent" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header" style="border: none">
-        
-
-        <h4 class="modal-title" id="formModalLabel">
-
-
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item active">
-          <a class="nav-link" data-toggle="tab" href="#student" role="tab" id="stab">Add Student to this Group</a> </li>
-          <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#date" role="tab" id="dtab">Add Date of Lessons</a> </li>
-        </ul></h4>
-        
-      </div>
-      <div class="tab-content">
-      <div class="tab-pane active" id="student">
-      <div class="modal-body">
-       <form name="form1">
-       <div class="form-group">
-    <label for="cname">姓名 (中文)</label>
-    <input type="text" class="form-control" id="cname" aria-describedby="emailHelp" placeholder="輸入中文姓名">
-  </div>
-  <div class="form-group">
-    <label for="ename">姓名 (英文)</label>
-    <input type="text" class="form-control" id="ename" aria-describedby="emailHelp" placeholder="Enter the student's name">
-  </div>
-  
-  <div class="form-group">
-    <label for="gender">Gender</label>
-    <select class="form-control" id="gender">
-      <option>-- Gender --</option>
-      <option value="M">M</option>
-      <option value="F">F</option>
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="class">班別</label>
-    <input type="text" class="form-control" id="class" aria-describedby="emailHelp" placeholder="Enter the class">
-  </div>
-  <div class="form-group">
-    <label for="classNo">班號</label>
-    <input type="text" class="form-control" id="classNo" aria-describedby="emailHelp" placeholder="Enter the class number">
-  </div>
-  <div class="form-group">
-    <label for="school">學校</label>
-    <input type="text" class="form-control" id="school" aria-describedby="emailHelp" placeholder="Enter the school name">
-  </div>
-  <!--</br>
-  <h4>語言背景</h4>
-  <hr>
-  <div class="form-group">
-    <label for="pob">出生國家/地區</label>
-    <input type="text" class="form-control" id="pob" aria-describedby="emailHelp" placeholder="Enter the place of birth">
-  </div>
-  <div class="form-group">
-    <label for="yearinHK">在香港的生活年期</label>
-    <input type="number" class="form-control" id="yearinHK" aria-describedby="emailHelp" placeholder="Number of living year in Hong Kong">
-  </div>
-  <div class="form-group">
-    <label for="yearinHK">在其他地方的生活年期</label>
-    <input type="number" class="form-control" id="yearinHK" aria-describedby="emailHelp" placeholder="Number of living year in other places">
-  </div>
--->
-  
-</form>
-      </div>
-      </div>
-      <div class="tab-pane" id="date">
-      <div class="modal-body">
-      <label>上課日期</label>
-      <form name="form2">
-      <div class="dateList" id="dateList">
-        <div class="form-group" id="inputDate1">
-       <div class="input-group" >
-       <span class="input-group-btn">
-          <button type="button" class="btn btn-success" onclick="addDate()">
-              <span class="glyphicon glyphicon-plus" ></span>
-            </button>
-        </span>
-        <input type="text" class="form-control" data-provide="datepicker" id="date1">
-        <span class="input-group-btn">
-          <button type="button" class="btn btn-danger" onclick="removeDate()">
-              <span class="glyphicon glyphicon-trash" id="danger"></span>
-            </button>
-        </span>
-        </div>
-        </div>
-        </div>
-      </form>
-      </div>
-      </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" id="submit" class="btn btn-primary" onclick="submitForm('S')">Submit</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 
 

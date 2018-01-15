@@ -3,7 +3,7 @@
   $table = "group_list";
   $tid = $_GET['tid'];
   if ($tid != null){
-    $mysql = mysqli_query($conn, "SELECT * FROM cllsc.$table WHERE cid = '$cid';");
+    $mysql = mysqli_query($conn, "SELECT * FROM cllsc.$table WHERE tid = '$tid';");
   }else{
     $mysql = mysqli_query($conn, "SELECT * FROM cllsc.$table;");
   }
@@ -56,9 +56,9 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="attendence.php">Attendence</a></li>
-            <li><a href="group.php">Group List</a></li>
-            <li><a href="student">Student List</a></li>
+            <li><a href="attendence2.php">Attendence</a></li>
+            <li><a href="group2.php?tid=<? echo $tid; ?>">Group List</a></li>
+            <li><a href="../login/logout.php"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
           </ul>
           <form class="navbar-form navbar-right">
             <input class="form-control" placeholder="Search..." type="text">
@@ -71,18 +71,13 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="attendence.php">Attendence</a></li>
-            <li class="active"><a href="group.php">Group List</a></li>
-            <li><a href="student.php">Student List</a></li>
+            <li><a href="attendence2.php">Attendence</a></li>
+            <li class="active"><a href="group2.php?tid=<? echo $tid; ?>">Group List</a></li>
           </ul>
 
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h3 class="page-header">Group List&nbsp&nbsp&nbsp
-            <button type="button" class = "btn btn-link" data-toggle="modal" data-target="#addGroup">
-              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-            </button>
-          </h3>
+          <h3 class="page-header">Group List</h3>
           <div class="table-responsive">
             <table class="table table-hover">
               <thead>
@@ -93,7 +88,6 @@
                   <th>Venue</th>
                   <th>Tutor</th>
                   <th>Time</th>
-                  <th>Edit</th>
                 </tr>
               </thead>
               <tbody>
@@ -114,9 +108,6 @@
                   <td>'.$infoArr['venue'].'</td>
                   <td>'.$tutorName['cname'].'老師</td>
                   <td>'.$infoArr['time'].'</td>
-                  <td>
-                  <button type="button" class = "btn btn-link" data-toggle="modal" data-target="#editGroup" data-id="'.$infoArr['gid'].'"><span class="glyphicon glyphicon-pencil" aria-hidden="true" ></span>
-                  </button></td>
                 </tr>';
 
                   }
@@ -128,141 +119,6 @@
       </div>
     </div>
     <!-- Modal -->
-<div class="modal fade" id="addGroup" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="formModalLabel">Add Group <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button></h4>
-        
-      </div>
-      <div class="modal-body">
-       <form>
-  <div class="form-group">
-    <label for="centre">學校/中心</label>
-    <select class="form-control" id="centre">
-      <option>Centre/School</option>
-      <?
-        $centreSql = mysqli_query($conn, "SELECT * FROM cllsc.centre_list;");
-        while ($centreArr = mysqli_fetch_assoc($centreSql)) {
-
-                    echo '<option value="'.$centreArr['cid'].'">'.$centreArr['cname'].'</option>';
-
-        }
-
-      ?>
-      
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="venue">地點</label>
-    <input type="text" class="form-control" id="venue" aria-describedby="emailHelp" placeholder="輸入上課班房">
-  </div>
-  <div class="form-group">
-    <label for="time">時間</label>
-    <input type="text" class="form-control" id="time" aria-describedby="emailHelp" placeholder="輸入上課時間">
-  </div>
-  <div class="form-group">
-    <label for="tutor">導師</label>
-    <select class="form-control" id="tutor">
-      <option>Teacher</option>
-      <?
-        $centreSql = mysqli_query($conn, "SELECT * FROM cllsc.account WHERE access = '2';");
-        while ($teacherArr = mysqli_fetch_assoc($centreSql)) {
-        			if ($teacherArr['cname'] != null){
-                    	echo '<option value="'.$teacherArr['username'].'">'.$teacherArr['cname'].'老師</option>';
-                	}else{
-                		echo '<option value="'.$teacherArr['username'].'">'.$teacherArr['ename'].'</option>';
-                	}
-        }
-
-      ?>
-      
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="capacity">Capacity</label>
-    <input class="form-control" type="number" value="20" id="capacity">
-  </div>
-</form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button id="submit" type="submit" class="btn btn-primary">Submit</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<div class="modal fade" id="editGroup" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="formModalLabel">Edit Group <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button></h4>
-        
-      </div>
-      <div class="modal-body">
-      <form>
-  <div class="form-group">
-    <label for="centre">學校/中心</label>
-    <select class="form-control" id="centreU">
-      <option>Centre/School</option>
-      <?
-        $centreSql = mysqli_query($conn, "SELECT * FROM cllsc.centre_list;");
-        while ($centreArr = mysqli_fetch_assoc($centreSql)) {
-
-                    echo '<option value="'.$centreArr['cid'].'">'.$centreArr['cname'].'</option>';
-
-        }
-
-      ?>
-      
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="venue">地點</label>
-    <input type="text" class="form-control" id="venueU" aria-describedby="emailHelp" placeholder="輸入上課班房">
-  </div>
-  <div class="form-group">
-    <label for="time">時間</label>
-    <input type="text" class="form-control" id="timeU" aria-describedby="emailHelp" placeholder="輸入上課時間">
-  </div>
-  <div class="form-group">
-    <label for="tutor">導師</label>
-    <select class="form-control" id="tutorU">
-      <option>Teacher</option>
-      <?
-        $centreSql = mysqli_query($conn, "SELECT * FROM cllsc.account WHERE access = '2';");
-        while ($teacherArr = mysqli_fetch_assoc($centreSql)) {
-        			if ($teacherArr['cname'] != null){
-                    	echo '<option value="'.$teacherArr['username'].'">'.$teacherArr['cname'].'老師</option>';
-                	}else{
-                		echo '<option value="'.$teacherArr['username'].'">'.$teacherArr['ename'].'</option>';
-                	}
-        }
-
-      ?>
-      
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="capacity">Capacity</label>
-    <input class="form-control" type="number" value="20" id="capacityU">
-  </div>
-  
-</form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" id="update" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -275,78 +131,12 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="src/ie10-viewport-bug-workaround.js"></script>
     <script type="text/javascript">
-    $("#submit").click(function(e){
-        e.preventDefault();
-        console.log("submit");
-        $.ajax({
-          type: "POST",
-          url: "group_add_action.php",
-          data: {
-            venue: $("#venue").val(),
-            time: $("#time").val(),
-            tutor: $("#tutor").val(),
-            capacity: $("#capacity").val(),
-            centre: $("#centre").val()
-
-          },
-          dataType: "json",
-          success: function(data){
-            console.log(data);
-            $("#addGroup").modal('toggle');
-            location.reload();
-          }
-        })
-      });
     	$('.table > tbody > tr').click(function(){
     		//row was clicked
     		var rowID = $(this).attr('value');
     		//console.log("row " + rowID + " was clicked");
     		window.location = "attendence2.php?type=group&id=" + rowID;
     	});
-      $("#editGroup").on('show.bs.modal', function(e){
-        var groupID = $(e.relatedTarget).data('id');
-        console.log(groupID);
-        $.ajax({
-          type: "POST",
-          url: "group_get_action.php",
-          data: {
-            gid: groupID
-
-          },
-          dataType: "json",
-          success: function(data){
-            console.log(data);
-            $(e.currentTarget).find('select[id="centreU"]').val(data.centre);
-            $(e.currentTarget).find('input[id="venueU"]').val(data.venue);
-            $(e.currentTarget).find('input[id="timeU"]').val(data.time);
-            $(e.currentTarget).find('select[id="tutorU"]').val(data.tutor);
-            $(e.currentTarget).find('input[id="capacityU"]').val(data.capacity);
-            
-          }
-        })
-        $("#update").click(function(e){
-          //console.log($("#cnameU").val());
-        $.ajax({
-          type: "POST",
-          url: "group_update_action.php",
-          data: {
-            gid: groupID,
-            venue: $("#venueU").val(),
-            time: $("#timeU").val(),
-            tutor: $("#tutorU").val(),
-            capacity: $("#capacityU").val(),
-            centre: $("#centreU").val()
-
-          },
-          dataType: "json",
-          success: function(data){
-            console.log(data);
-            $("#editGroup").modal('toggle');
-            location.reload();
-          }
-        })
-      })
-      });
     </script>
 
 

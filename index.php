@@ -3,8 +3,10 @@
 if ($_SESSION['access'] == 1){
   header("Refresh:2; url=centre.php");
 }else if ($_SESSION['access'] == 2){
-  //header("Refresh:2; url=index3.php");
-  echo "<div class='alert alert-success'><strong>development in progress</strong>.</div>";
+    $TID = $_SESSION['username'];
+    header("Refresh:2; url=group2.php?tid=$TID");
+}else if ($_SESSION['access'] == 3){
+    echo "<div class='alert alert-success'><strong>Development in progress</strong>.</div>";
 }
 
 ?>
