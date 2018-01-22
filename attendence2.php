@@ -69,7 +69,7 @@
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#">Attendence</a></li>
             <li><a href="group2.php?tid=<? echo $tid; ?>">Group List</a></li>
-            <li><a href="../login/logout.php"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
+            <li><a href="login/logout.php"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
           </ul>
           <form class="navbar-form navbar-right">
             <input class="form-control" placeholder="Search..." type="text">
@@ -107,7 +107,7 @@
 
           ?>
           <div class="table-responsive">
-            <table class="table table-hover">
+            <table id="att_table" class="table table-hover">
               <thead>
                 <tr>
                   <th>Class</th>
@@ -116,7 +116,7 @@
                   <th>Chin. Name</th>
                   <?
                     while ($lessArr = mysqli_fetch_assoc($lessSql)){
-                      echo '<th>'.$lessArr['ldate'].'</th>';
+                      echo '<th colspan="2">'.$lessArr['ldate'].'</th>';
                     }
                     
                   ?>
@@ -135,32 +135,37 @@
                       <td>'.$studArr['cname'].'</td>';
                       $attSql= mysqli_query($conn, "SELECT * FROM cllsc.att_list WHERE sid = ".$studArr['sid'].";");
                       while ($attArr = mysqli_fetch_assoc($attSql)){
-                        //echo '<th>'.$lessArr['ldate'].'</th>';
-                        //$attsql = mysqli_query($conn, "SELECT * FROM cllsc.att_list WHERE lid = $lessArr['lid'];");
-                        echo '<td align="center"><form class="uk-form"><input type="radio" name="'.$attArr['lid'].'" value="'.$attArr['sid'].'"';
+                          echo '
+                      <td align="center">
+                          <form class="uk-form">
+                            <input class="ck_'.$attArr['lid'].'" type="radio" name="'.$attArr['lid'].'" value="'.$attArr['sid'].'" disabled="true"';
                               if ($attArr['att'] == 1) {
                                   echo 'checked ';
                               };
-                         echo '>'; 
+                            echo '></form>';
+                            echo '<td class="ps_'.$attArr['lid'].'"/><input type="text" class="form-control" value="'.$attArr['ps'].'" name="'.$attArr['lid'].'" id="'.$attArr['sid'].'" readonly/></td>';
                       }
-                      /*for ($i=0; $i<count($dateCol); $i++){
-                         echo '<td align="center"><form class="uk-form"><input type="radio" name="'.$dateCol[$i].'" value="'.$studArr['sid'].'"';
-                              if ($studArr[$dateCol[$i]] == 1) {
-                                  echo 'checked ';
-                              }else{
-                                echo $studArr[$dateCol[$i]];
-                              };
-                         echo '>';     
-                      }*/
-
-                     
-                      echo '</form></td>';
-                      echo '
-                      </tr>';
-
+                      echo '</td>';
+                      echo '</tr>';
                     }
                   }
               ?>
+              <tr>
+                  <td> </td>
+                  <td> </td>
+                  <td> </td>
+                  <td> </td>
+                  <?
+                  $lessSql = mysqli_query($conn, "SELECT * FROM cllsc.lesson_list WHERE gid = $gid;");
+                  $cnt = 0;
+                  while ($lessArr = mysqli_fetch_assoc($lessSql)){
+                      echo '<td colspan=2 align="center">
+                            <button type="button" id="save_'.$cnt.'" value="'.$lessArr['lid'].'" class="btn">Edit</button>
+                            </td>';
+                      $cnt++;
+                  }
+                  ?>
+              </tr>
               </tbody>
             </table>
           </div>
@@ -300,45 +305,79 @@
 
       
       //console.log(get);
-      
-    	$('.table > tbody > tr').click(function(){
-    		//row was clicked
-    		//var rowID = $(this).attr('value');
-    		//console.log("row " + rowID + " was clicked");
-    		// window.location = "127.0.0.1/cacler/ssp/attendence.php?type=centre&id=" + rowID;
-    	});
-
-      var bool;
-var optionbox;
-$("input[type='radio']").click(function () {
-  var sid =$(this).val();
-  optionbox = $(this);
-  var lid = optionbox.attr('name');
- //console.log(sid);
-      $.ajax({
-            type : 'POST',
-            url : 'att_update.php',
-            data: {
-                sid   : sid,
-                lid   : lid,
-            },
-            dataType: "json",
-            success:function (data) {
-              bool = data.bool
-              //console.log(data.bool);
-            },
-            complete:function(data) {
-              if (bool==1){
-                optionbox.prop('checked',true);
-              //console.log("true");
-              }else{
-                optionbox.prop('checked',false);
-              //console.log("false");
-              }
-          }
+        var bool;
+        var optionbox;
+        $("input[type='radio']").click(function () {
+            var sid =$(this).val();
+            optionbox = $(this);
+            var lid = optionbox.attr('name');
+            console.log(sid);
+            $.ajax({
+                type: 'POST',
+                url: 'att_update.php',
+                data: {
+                    sid: sid,
+                    lid: lid,
+                },
+                dataType: "json",
+                success: function (data) {
+                    bool = data.bool
+                    //console.log(data.bool);
+                },
+                complete: function (data) {
+                    if (bool == 1) {
+                        optionbox.prop('checked', true);
+                        //console.log("true");
+                    } else {
+                        optionbox.prop('checked', false);
+                        //console.log("false");
+                    }
+                }
+            })
         });
-    });
+
+        $('.table > tbody > tr > td > .btn').click(function(e){
+            var id = $(this).attr('id');
+            var lid = $(this).val();
+            if($(this).text() == 'Save') {
+                var ps = ".table > tbody > tr > .ps_" + lid + " > input[type='text']";
+                var ps_json = [];
+                $(ps).each(function () {
+                    $(this).prop("readonly", true);
+                    ps_json.push({
+                        sid: $(this).attr('id'),
+                        ps: $(this).val(),
+                    });
+                });
+                var ck = ".table > tbody > tr > td > form > .ck_" + lid + "";
+                $(ck).each(function () {
+                    $(this).prop("disabled", true);
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: 'att_ps_update.php',
+                    data: {
+                        lid: lid,
+                        ps: ps_json,
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        //console.log(data);
+                    }
+                })
+            }else{
+                var ps = ".table > tbody > tr > .ps_" + lid + " > input[type='text']";
+                $(ps).each(function () {
+                    $(this).prop("readonly", false);
+                });
+                var ck = ".table > tbody > tr > td > form > .ck_" + lid + "";
+                $(ck).each(function () {
+                    $(this).prop("disabled", false);
+                });
+            }
+            $(this).text(function(_, value) {
+                return value == 'Save' ? 'Edit' : 'Save';
+            });
+        });
     </script>
-
-
 </body></html>
