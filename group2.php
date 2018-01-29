@@ -58,6 +58,7 @@
           <ul class="nav navbar-nav navbar-right">
             <li><a href="attendence2.php">Attendence</a></li>
             <li><a href="group2.php?tid=<? echo $tid; ?>">Group List</a></li>
+            <li><a href="change_password.php?tid=<? echo $tid; ?>">Change Password</a></li>
             <li><a href="login/logout.php"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
           </ul>
           <form class="navbar-form navbar-right">

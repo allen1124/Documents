@@ -17,7 +17,7 @@ if (mysqli_num_rows($mysql)>0){
 			while ($gArr = mysqli_fetch_assoc($gsql)){
 				echo $gArr["ename"];
 			}
-			include "gmail.php"
+			include "gmail.php";
 	}
 }else{
   echo "There is no lesson today";
