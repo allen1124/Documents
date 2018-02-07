@@ -67,7 +67,8 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Attendence</a></li>
+            <li ><a href="teaching_note2.php?id=<? echo $gid; ?>">Teaching Note</a></li>
+            <li class="active"><a href="#">Attendence</a></li>
             <li><a href="group2.php?tid=<? echo $tid; ?>">Group List</a></li>
             <li><a href="change_password.php?tid=<? echo $tid; ?>">Change Password</a></li>
             <li><a href="login/logout.php"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
@@ -83,13 +84,16 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
+            <li ><a href="teaching_note2.php?id=<? echo $gid; ?>">Teaching Note</a></li>
             <li class="active"><a href="#">Attendence</a></li>
             <li ><a href="group2.php?tid=<? echo $tid; ?>">Group List</a></li>
           </ul>
 
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h3 class="page-header">Group Attendence</h3>
+          <h3 class="page-header">Group Attendence
+              <button type="button" class="btn btn-info pull-right" onclick="location.href='teaching_note2.php?id=<? echo $gid;?>'">Upload Teaching Note</button>
+          </h3>
           <?  
               $cid = $infoArr['cid'];
               $sql = "SELECT * FROM cllsc.centre_list WHERE cid = '$cid';";
