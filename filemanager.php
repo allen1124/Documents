@@ -13,7 +13,7 @@ error_reporting( error_reporting() & ~E_NOTICE );
 $allow_delete = true; // Set to false to disable delete button and delete POST request.
 $allow_create_folder = false; // Set to false to disable folder creation
 $allow_upload = false; // Set to true to allow upload files
-$allow_direct_link = true; // Set to false to only allow downloads and not direct link
+$allow_direct_link = false; // Set to false to only allow downloads and not direct link
 
 $disallowed_extensions = ['php'];  // must be an array. Extensions disallowed to be uploaded
 
@@ -40,7 +40,7 @@ if($_POST) {
     if($_COOKIE['_sfm_xsrf'] !== $_POST['xsrf'] || !$_POST['xsrf'])
         err(403,"XSRF Failure");
 }
-
+include "connect.php";
 $file = $_REQUEST['file'] ?: './upload';
 if($_GET['do'] == 'list') {
     if (is_dir($file)) {
@@ -50,10 +50,30 @@ if($_GET['do'] == 'list') {
         foreach($files as $entry) if($entry !== basename(__FILE__) && !in_array(strtolower(pathinfo($entry, PATHINFO_EXTENSION)), $hidden_extensions)) {
             $i = $directory . '/' . $entry;
             $stat = stat($i);
+            $fname = basename($i);
+            $mysql = mysqli_query($conn, "SELECT * FROM cllsc.file WHERE fname = '$fname';");
+            $infoArr = mysqli_fetch_assoc($mysql);
+            $tid = $infoArr['tid'];
+            $lid = $infoArr['lid'];
+            $tsql = "SELECT * FROM cllsc.account WHERE username = '$tid';";
+            $tName = mysqli_query($conn, $tsql);
+            $tutorName = mysqli_fetch_assoc($tName);
+
+            $lsql = "SELECT * FROM cllsc.lesson_list WHERE lid = '$lid';";
+            $lInfo = mysqli_query($conn, $lsql);
+            $lessonDate = mysqli_fetch_assoc($lInfo);
+            $gid = $lessonDate['gid'];
+
+            $gsql = "SELECT * FROM cllsc.group_list WHERE gid = '$gid';";
+            $gInfo = mysqli_query($conn, $gsql);
+            $lessonTime = mysqli_fetch_assoc($gInfo);
+
             $result[] = [
                 'mtime' => $stat['mtime'],
                 'size' => $stat['size'],
                 'name' => basename($i),
+                'tid' => $tutorName['cname'].'老師',
+                'lid' => $lessonDate['ldate'].' - '.$lessonTime['time'],
                 'path' => preg_replace('@^\./@', '', $i),
                 'is_dir' => is_dir($i),
                 'is_deleteable' => $allow_delete && ((!is_dir($i) && is_writable($directory)) ||
@@ -397,10 +417,11 @@ $MAX_UPLOAD_SIZE = min(asBytes(ini_get('post_max_size')), asBytes(ini_get('uploa
                 var $html = $('<tr />')
                     .addClass(data.is_dir ? 'is_dir' : '')
                     .append( $('<td class="first" />').append($link) )
+                    .append( $('<td/>').text(data.tid) )
+                    .append( $('<td/>').text(data.lid) )
                     .append( $('<td/>').attr('data-sort',data.is_dir ? -1 : data.size)
                         .html($('<span class="size" />').text(formatFileSize(data.size))) )
                     .append( $('<td/>').attr('data-sort',data.mtime).text(formatTimestamp(data.mtime)) )
-                    .append( $('<td/>').text(perms.join('+')) )
                     .append( $('<td/>').append($dl_link).append( data.is_deleteable ? $delete_link : '') )
                 return $html;
             }
@@ -453,7 +474,7 @@ $MAX_UPLOAD_SIZE = min(asBytes(ini_get('post_max_size')), asBytes(ini_get('uploa
                     <li><a href="group.php">Group List</a></li>
                     <li><a href="student.php">Student List</a></li>
                     <li><a href="account.php">Account</a></li>
-                    <li><a href="filemanager.php">Teaching Note</a></li>
+                    <li><a href="filemanager.php">Teaching Log</a></li>
                     <li><a href="#">Report</a></li>
                     <li><a href="login/logout.php"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
                 </ul>
@@ -470,7 +491,7 @@ $MAX_UPLOAD_SIZE = min(asBytes(ini_get('post_max_size')), asBytes(ini_get('uploa
                     <li><a href="group.php">Group List</a></li>
                     <li><a href="student.php">Student List</a></li>
                     <li><a href="account.php">Account</a></li>
-                    <li class="active"><a href="filemanager.php.php">Teaching Note</a></li>
+                    <li class="active"><a href="filemanager.php">Teaching Log</a></li>
                     <li><a href="#">Report</a></li>
                 </ul>
             </div>
@@ -478,9 +499,10 @@ $MAX_UPLOAD_SIZE = min(asBytes(ini_get('post_max_size')), asBytes(ini_get('uploa
                 <h3 class="page-header">File Manager</h3>
                 <table  class="table table-hover"id="table"><thead><tr>
                     <th>Name</th>
+                    <th>Teacher</th>
+                    <th>Lesson</th>
                     <th>Size</th>
                     <th>Modified</th>
-                    <th>Permissions</th>
                     <th>Actions</th>
                     </tr></thead>
                     <tbody id="list">

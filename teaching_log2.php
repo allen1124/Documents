@@ -56,7 +56,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="teaching_note2.php?id=<? echo $gid; ?>">Teaching Note</a></li>
+                <li class="active"><a href="teaching_log2.php?id=<? echo $gid; ?>">Teaching Log</a></li>
                 <li><a href="attendence2.php?type=group&id=<? echo $gid; ?>">Attendence</a></li>
                 <li><a href="group2.php?tid=<? echo $tid; ?>">Group List</a></li>
                 <li><a href="change_password.php?tid=<? echo $tid; ?>">Change Password</a></li>
@@ -72,7 +72,7 @@
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                <li class="active"><a href="#">Teaching Note</a></li>
+                <li class="active"><a href="#">Teaching Log</a></li>
                 <li><a href="attendence2.php?type=group&id=<? echo $gid; ?>">Attendence</a></li>
                 <li><a href="group2.php?tid=<? echo $tid; ?>">Group List</a></li>
             </ul>
@@ -83,7 +83,7 @@
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <div id="messages_content"></div>
         </div>
-        <h3 class="page-header">Teaching Note Upload</h3>
+        <h3 class="page-header">Teaching Log Upload</h3>
         <form id="upload" method="post" enctype="multipart/form-data">
             <label>Select Lessons:</label>
             <select class="form-control" name="lid" id="lid">
@@ -96,11 +96,11 @@
                 }
                 ?>
             </select>
-            <label>Upload Teaching Note:</label>
+            <label>Upload Teaching Log:</label>
             <div class="input-group">
                 <label class="input-group-btn">
                     <span class="btn btn-primary">
-                        Browse&hellip; <input id="teaching_note" name="teaching_note" type="file" style="display: none;" multiple>
+                        Browse&hellip; <input id="teaching_log" name="teaching_log" type="file" style="display: none;" multiple>
                     </span>
                 </label>
                 <input type="text" class="form-control" readonly>
@@ -144,18 +144,19 @@
     });
 
     $("#submit").click(function(e){
-        if( $('#teaching_note').prop('files').length == 0 ){
+        if( $('#teaching_log').prop('files').length == 0 ){
             $('#messages').removeClass('hide').addClass('alert alert-danger alert-dismissible').slideDown().show();
             $('#messages_content').html('<strong>Error!</strong> No File Selected');
             $('#modal').modal('show');
         }else{
             var form_data = new FormData();
-            for (var i = 0; i < $('#teaching_note').prop('files').length; i++) {
-                form_data.append("file[]", $('#teaching_note').prop('files')[i]);
+            for (var i = 0; i < $('#teaching_log').prop('files').length; i++) {
+                form_data.append("file[]", $('#teaching_log').prop('files')[i]);
             }
             form_data.append('lid', $("#lid").val());
+            form_data.append('tid', "<?echo $tid?>");
             $.ajax({
-                url: 'upload_teachingnote.php',
+                url: 'upload_teachinglog.php',
                 type: 'post',
                 dataType: "json",
                 contentType: false,

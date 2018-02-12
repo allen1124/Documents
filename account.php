@@ -58,7 +58,7 @@
             <li><a href="group.php">Group List</a></li>
             <li><a href="student.php">Student List</a></li>
             <li><a href="account.php">Account</a></li>
-            <li><a href="filemanager.php">Teaching Note</a></li>
+            <li><a href="filemanager.php">Teaching Log</a></li>
             <li><a href="#">Report</a></li>
             <li><a href="login/logout.php"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
           </ul>
@@ -76,7 +76,7 @@
             <li><a href="group.php">Group List</a></li>
             <li><a href="student.php">Student List</a></li>
             <li class="active"><a href="account.php">Account</a></li>
-            <li><a href="filemanager.php">Teaching Note</a></li>
+            <li><a href="filemanager.php">Teaching Log</a></li>
             <li><a href="#">Report</a></li>
           </ul>
 

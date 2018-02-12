@@ -56,7 +56,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="teaching_note2.php">Teaching Note</a></li>
+            <li><a href="teaching_log2.php">Teaching log</a></li>
             <li><a href="attendence2.php">Attendence</a></li>
             <li class="active"><a href="group2.php?tid=<? echo $tid; ?>">Group List</a></li>
             <li><a href="change_password.php?tid=<? echo $tid; ?>">Change Password</a></li>
@@ -73,7 +73,7 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li ><a href="teaching_note2.php">Teaching Note</a></li>
+            <li ><a href="teaching_log2.php">Teaching Log</a></li>
             <li><a href="attendence2.php">Attendence</a></li>
             <li class="active"><a href="group2.php?tid=<? echo $tid; ?>">Group List</a></li>
           </ul>
