@@ -11,6 +11,7 @@ if (isset($_SESSION['username'])) {
     <title>Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
+    <link rel="icon" href="http://moodle.hku.hk/theme/image.php/hkumoodle/theme/1506590557/favicon">
     <link href="../css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="../css/main.css" rel="stylesheet" media="screen">
   </head>
