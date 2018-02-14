@@ -109,6 +109,27 @@
         <div class="modal-footer">
             <button type="submit" id="submit" class="btn btn-primary">Submit</button>
         </div>
+        <div>
+            <div id="messages1" class="hide" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <div id="messages1_content"></div>
+            </div>
+            <h3 class="page-header">Other Documents</h3>
+            <form id="upload1" method="post" enctype="multipart/form-data">
+                <label>Upload Other Documents:</label>
+                <div class="input-group">
+                    <label class="input-group-btn">
+                        <span class="btn btn-primary">
+                            Browse&hellip; <input id="teaching_plan" name="teaching_plan" type="file" style="display: none;" multiple>
+                        </span>
+                    </label>
+                    <input type="text" class="form-control" readonly>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="submit1" id="submit1" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
     </div>
 </div>
 <!-- Bootstrap core JavaScript
@@ -154,6 +175,7 @@
                 form_data.append("file[]", $('#teaching_log').prop('files')[i]);
             }
             form_data.append('lid', $("#lid").val());
+            form_data.append('gid', "<?echo $gid?>");
             form_data.append('tid', "<?echo $tid?>");
             $.ajax({
                 url: 'upload_teachinglog.php',
@@ -177,6 +199,48 @@
                         }
                     }
                     $('#messages_content').html(content);
+                    $('#modal').modal('show');
+                    console.log(data);
+                }
+            });
+        }
+    });
+
+    $("#submit1").click(function(e){
+        if( $('#teaching_plan').prop('files').length == 0 ){
+            $('#messages1').removeClass('hide').addClass('alert alert-danger alert-dismissible').slideDown().show();
+            $('#messages1_content').html('<strong>Error!</strong> No File Selected');
+            $('#modal').modal('show');
+        }else{
+            var form_data = new FormData();
+            for (var i = 0; i < $('#teaching_plan').prop('files').length; i++) {
+                form_data.append("file[]", $('#teaching_plan').prop('files')[i]);
+            }
+            form_data.append('lid', 99999);
+            form_data.append('gid', "<?echo $gid?>");
+            form_data.append('tid', "<?echo $tid?>");
+            $.ajax({
+                url: 'upload_teachinglog.php',
+                type: 'post',
+                dataType: "json",
+                contentType: false,
+                processData: false,
+                data: form_data,
+                success: function(data){
+                    if(data['error'].length == 0){
+                        $('#messages1').removeClass('hide alert-danger').addClass('alert alert-success alert-dismissible').slideDown().show();
+                        var content = '<strong>Success!</strong> File successfully uploaded<br>File Uploaded:<br>';
+                        for(var i = 0; i < data['result'].length; i++){
+                            content = content.concat(data['result'][i]+'<br>');
+                        }
+                    }else{
+                        $('#messages1').removeClass('hide').addClass('alert alert-danger alert-dismissible').slideDown().show();
+                        var content = '<strong>Error!</strong> There is error during file uploading<br>File not Uploaded:<br>';
+                        for(var i = 0; i < data['error'].length; i++){
+                            content = content.concat(data['error'][i]+'<br>');
+                        }
+                    }
+                    $('#messages1_content').html(content);
                     $('#modal').modal('show');
                     console.log(data);
                 }

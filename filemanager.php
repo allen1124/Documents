@@ -55,33 +55,47 @@ if($_GET['do'] == 'list') {
             $infoArr = mysqli_fetch_assoc($mysql);
             $tid = $infoArr['tid'];
             $lid = $infoArr['lid'];
+            $gid = $infoArr['gid'];
             $tsql = "SELECT * FROM cllsc.account WHERE username = '$tid';";
             $tName = mysqli_query($conn, $tsql);
             $tutorName = mysqli_fetch_assoc($tName);
-
             $lsql = "SELECT * FROM cllsc.lesson_list WHERE lid = '$lid';";
             $lInfo = mysqli_query($conn, $lsql);
             $lessonDate = mysqli_fetch_assoc($lInfo);
-            $gid = $lessonDate['gid'];
-
             $gsql = "SELECT * FROM cllsc.group_list WHERE gid = '$gid';";
             $gInfo = mysqli_query($conn, $gsql);
             $lessonTime = mysqli_fetch_assoc($gInfo);
-
-            $result[] = [
-                'mtime' => $stat['mtime'],
-                'size' => $stat['size'],
-                'name' => basename($i),
-                'tid' => $tutorName['cname'].'老師',
-                'lid' => $lessonDate['ldate'].' - '.$lessonTime['time'],
-                'path' => preg_replace('@^\./@', '', $i),
-                'is_dir' => is_dir($i),
-                'is_deleteable' => $allow_delete && ((!is_dir($i) && is_writable($directory)) ||
-                        (is_dir($i) && is_writable($directory) && is_recursively_deleteable($i))),
-                'is_readable' => is_readable($i),
-                'is_writable' => is_writable($i),
-                'is_executable' => is_executable($i),
-            ];
+            if($lid == 99999) {
+                $result[] = [
+                    'mtime' => $stat['mtime'],
+                    'size' => $stat['size'],
+                    'name' => basename($i),
+                    'tid' => $tutorName['cname'] . '老師',
+                    'lid' => "",
+                    'path' => preg_replace('@^\./@', '', $i),
+                    'is_dir' => is_dir($i),
+                    'is_deleteable' => $allow_delete && ((!is_dir($i) && is_writable($directory)) ||
+                            (is_dir($i) && is_writable($directory) && is_recursively_deleteable($i))),
+                    'is_readable' => is_readable($i),
+                    'is_writable' => is_writable($i),
+                    'is_executable' => is_executable($i),
+                ];
+            }else{
+                $result[] = [
+                    'mtime' => $stat['mtime'],
+                    'size' => $stat['size'],
+                    'name' => basename($i),
+                    'tid' => $tutorName['cname'] . '老師',
+                    'lid' => $lessonDate['ldate'] . ' - ' . $lessonTime['time'],
+                    'path' => preg_replace('@^\./@', '', $i),
+                    'is_dir' => is_dir($i),
+                    'is_deleteable' => $allow_delete && ((!is_dir($i) && is_writable($directory)) ||
+                            (is_dir($i) && is_writable($directory) && is_recursively_deleteable($i))),
+                    'is_readable' => is_readable($i),
+                    'is_writable' => is_writable($i),
+                    'is_executable' => is_executable($i),
+                ];
+            }
         }
     } else {
         err(412,"Not a Directory");
@@ -129,6 +143,12 @@ function rmrf($dir) {
             rmrf("$dir/$file");
         rmdir($dir);
     } else {
+        global $conn;
+        include "connect.php";
+        $fname = substr($dir, 7, strlen($dir));
+        print_r(substr($dir, 7, strlen($dir)));
+        $delsql = "DELETE FROM cllsc.file WHERE fname = '$fname'";
+        echo mysqli_query($conn, $delsql);
         unlink($dir);
     }
 }

@@ -1,6 +1,7 @@
 <?php
     include("connect.php");
     $lid = $_POST['lid'];
+    $gid = $_POST['gid'];
     $tid = $_POST['tid'];
     $sql="UPDATE lesson_list SET `upload`=1 WHERE `lid`='$lid';";
     $destination_path = getcwd().DIRECTORY_SEPARATOR.'upload'.DIRECTORY_SEPARATOR;
@@ -13,7 +14,7 @@
         }else {
             move_uploaded_file($_FILES['file']['tmp_name'][$i], $target_path);
             array_push($data['result'], $file_name);
-            $add_sql = "INSERT INTO file (fname, lid, tid) VALUES('$file_name', '$lid',  '$tid');";
+            $add_sql = "INSERT INTO file (fname, lid, gid, tid) VALUES('$file_name', '$lid', '$gid', '$tid');";
             if (mysqli_query($conn, $sql) && mysqli_query($conn, $add_sql)){
                 $data['sql'] = '1';
             }else{
