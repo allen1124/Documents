@@ -51,9 +51,9 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="index.html">Dashboard</a></li>
             <li><a href="attendence.php">Attendence</a></li>
             <li><a href="centre.php">Centre List</a></li>
+            <li><a href="school.php">School List</a></li>
             <li><a href="group.php">Group List</a></li>
             <li><a href="student.php">Student List</a></li>
             <li><a href="account.php">Account</a></li>
@@ -69,9 +69,9 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="#">Dashboard<span class="sr-only">(current)</span></a></li>
             <li><a href="attendence.php">Attendence</a></li>
             <li class="active"><a href="centre.php">Centre List</a></li>
+            <li><a href="school.php">School List</a></li>
             <li><a href="group.php">Group List</a></li>
             <li><a href="student.php">Student List</a></li>
             <li><a href="account.php">Account</a></li>
@@ -81,7 +81,7 @@
 
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h3 class="page-header">Centre/ School List&nbsp&nbsp&nbsp
+          <h3 class="page-header">Centre List&nbsp&nbsp&nbsp
             <button type="button" class = "btn btn-link" data-toggle="modal" data-target="#addCentre">
               <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
             </button>

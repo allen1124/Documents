@@ -1,14 +1,14 @@
 <?php
 include("connect.php");
-$sid = $_POST["sid"];
-$sql="SELECT * FROM student_list WHERE`sid` = '$sid';";
+$Sid = $_POST["Sid"];
+$sql="SELECT * FROM school_list where`Sid` = $Sid ;";
 /*for($j=0;$j<count($fieldArr);$j++)
     $sql=$sql.", ".$fieldArr[$j];
 $sql=$sql.");";*/
 $query = mysqli_query($conn, $sql);
 if (mysqli_num_rows($query)>0){
     $Arr=mysqli_fetch_assoc($query);
-    $data = array('ename'=>$Arr['ename'], 'cname'=>$Arr['cname'], 'gender'=>$Arr['gender'], 'class'=>$Arr['class'], 'classNo'=>$Arr['class_num'], 'school'=>$Arr['school'],'centre'=>$Arr['cid'], 'group'=>$Arr['gid']);
+    $data = array('cname'=>$Arr['cname'], 'ename'=>$Arr['ename'], 'teacher_name'=>$Arr['teacher_name'], 'email_addr'=>$Arr['email_addr']);
 }else{
     $data = array('error'=>$sql);
 }

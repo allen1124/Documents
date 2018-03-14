@@ -66,9 +66,9 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="index.html">Dashboard</a></li>
             <li><a href="#">Attendence</a></li>
             <li><a href="centre.php">Centre List</a></li>
+            <li><a href="school.php">School List</a></li>
             <li><a href="group.php">Group List</a></li>
             <li><a href="student.php">Student List</a></li>
             <li><a href="account.php">Account</a></li>
@@ -84,9 +84,9 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="#">Dashboard</a></li>
             <li class="active"><a href="#">Attendence</a></li>
             <li ><a href="centre.php">Centre List</a></li>
+            <li><a href="school.php">School List</a></li>
             <li ><a href="group.php">Group List</a></li>
             <li><a href="student.php">Student List</a></li>
             <li><a href="account.php">Account</a></li>

@@ -488,9 +488,9 @@ $MAX_UPLOAD_SIZE = min(asBytes(ini_get('post_max_size')), asBytes(ini_get('uploa
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="index.html">Dashboard</a></li>
                     <li><a href="attendence.php">Attendence</a></li>
                     <li><a href="centre.php">Centre List</a></li>
+                    <li><a href="school.php">School List</a></li>
                     <li><a href="group.php">Group List</a></li>
                     <li><a href="student.php">Student List</a></li>
                     <li><a href="account.php">Account</a></li>
@@ -505,9 +505,9 @@ $MAX_UPLOAD_SIZE = min(asBytes(ini_get('post_max_size')), asBytes(ini_get('uploa
         <div class="row">
             <div class="col-sm-3 col-md-2 sidebar">
                 <ul class="nav nav-sidebar">
-                    <li><a href="#">Dashboard<span class="sr-only">(current)</span></a></li>
                     <li><a href="attendence.php">Attendence</a></li>
                     <li><a href="centre.php">Centre List</a></li>
+                    <li><a href="school.php">School List</a></li>
                     <li><a href="group.php">Group List</a></li>
                     <li><a href="student.php">Student List</a></li>
                     <li><a href="account.php">Account</a></li>

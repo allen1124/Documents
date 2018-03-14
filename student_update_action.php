@@ -1,8 +1,8 @@
 <?php
 include("connect.php");
-$data=array($_POST['id'], $_POST['cname'], $_POST['ename'], $_POST['gender'], $_POST['class'], $_POST['classNo'], $_POST['school'], $_POST['group']);
+$data=array($_POST['id'], $_POST['cname'], $_POST['ename'], $_POST['gender'], $_POST['class'], $_POST['classNo'], $_POST['school'], $_POST['centre'], $_POST['group']);
 $gid = $data[7];
-$sql="UPDATE student_list SET `cname`='$data[1]', `ename`='$data[2]', `gender`='$data[3]', `class`='$data[4]', `class_num`='$data[5]', `school`='$data[6]', `gid`='$data[7]' WHERE `sid`='$data[0]';";
+$sql="UPDATE student_list SET `cname`='$data[1]', `ename`='$data[2]', `gender`='$data[3]', `class`='$data[4]', `class_num`='$data[5]', `school`='$data[6]', `cid`='$data[7]', `gid`='$data[8]' WHERE `sid`='$data[0]';";
 
 /*for($j=0;$j<count($fieldArr);$j++)
     $sql=$sql.", ".$fieldArr[$j];

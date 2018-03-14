@@ -56,9 +56,9 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="index.html">Dashboard</a></li>
             <li><a href="attendence.php">Attendence</a></li>
             <li><a href="centre.php">Centre List</a></li>
+            <li><a href="school.php">School List</a></li>
             <li><a href="group.php">Group List</a></li>
             <li><a href="student.php">Student List</a></li>
             <li><a href="account.php">Account</a></li>
@@ -74,9 +74,9 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="#">Dashboard</a></li>
             <li><a href="attendence.php">Attendence</a></li>
-            <li ><a href="centre.php">Centre List</a></li>
+            <li><a href="centre.php">Centre List</a></li>
+            <li><a href="school.php">School List</a></li>
             <li><a href="group.php">Group List</a></li>
             <li class="active"><a href="student.php">Student List</a></li>
             <li><a href="account.php">Account</a></li>
@@ -102,6 +102,7 @@
                   <th>Class</th>
                   <th>Class No.</th>
                   <th>School</th>
+                  <th>Centre</th>
                   <th>Grp ID</th>
                   <th>Edit</th>
                 </tr>
@@ -109,10 +110,14 @@
               <tbody>
               <?
                   while ($infoArr = mysqli_fetch_assoc($mysql)) {
-                    //$cid = $infoArr['sid'];
-                    //$sql = "SELECT * FROM cllsc.centre_list WHERE cid = '$cid';";
-                    //$getName = mysqli_query($conn, $sql);
-                    //$schoolName = mysqli_fetch_assoc($getName);
+                    $Sid = $infoArr['school'];
+                    $cid = $infoArr['cid'];
+                    $Ssql = "SELECT * FROM cllsc.school_list WHERE Sid = '$Sid';";
+                    $Csql = "SELECT * FROM cllsc.centre_list WHERE cid = '$cid';";
+                    $getSName = mysqli_query($conn, $Ssql);
+                    $getCName = mysqli_query($conn, $Csql);
+                    $school = mysqli_fetch_assoc($getSName);
+                    $centre = mysqli_fetch_assoc($getCName);
                     echo '<tr value="'.$infoArr['sid'].'">
                   <td>'.$infoArr['sid'].'</td>
                   <td>'.$infoArr['cname'].'</td>
@@ -120,7 +125,8 @@
                   <td>'.$infoArr['gender'].'</td>
                   <td>'.$infoArr['class'].'</td>
                   <td>'.$infoArr['class_num'].'</td>
-                  <td>'.$infoArr['school'].'</td>
+                  <td>'.$school['cname'].'</td>
+                  <td>'.$centre['cname'].'</td>
                   <td>'.$infoArr['gid'].'</td>
                   <td>
                   <button type="button" class = "btn btn-link" data-toggle="modal" data-target="#editStudent"><span class="glyphicon glyphicon-pencil" aria-hidden="true" ></span>
@@ -174,21 +180,26 @@
   </div>
   <div class="form-group">
     <label for="school">學校</label>
-    <input type="text" class="form-control" id="school" aria-describedby="emailHelp" placeholder="Enter the school name">
+      <select class="form-control" id="school">
+          <option>School</option>
+          <?
+          $schoolSql = mysqli_query($conn, "SELECT * FROM cllsc.school_list;");
+          while ($schoolArr = mysqli_fetch_assoc($schoolSql)) {
+              echo '<option value="'.$schoolArr['Sid'].'">'.$schoolArr['cname'].'</option>';
+          }
+          ?>
+      </select>
   </div>
 
   <div class="form-group">
     <label for="centre">中心</label>
     <select class="form-control" id="centre">
-      <option>Centre/School</option>
+      <option>Centre</option>
       <?
         $centreSql = mysqli_query($conn, "SELECT * FROM cllsc.centre_list;");
         while ($centreArr = mysqli_fetch_assoc($centreSql)) {
-
-                    echo '<option value="'.$centreArr['cid'].'">'.$centreArr['cname'].'</option>';
-
+            echo '<option value="'.$centreArr['cid'].'">'.$centreArr['cname'].'</option>';
         }
-
       ?>
       
     </select>
@@ -261,14 +272,22 @@
     <input type="text" class="form-control" id="classNoU" aria-describedby="emailHelp" placeholder="Enter the class number">
   </div>
   <div class="form-group">
-    <label for="school">學校</label>
-    <input type="text" class="form-control" id="schoolU" aria-describedby="emailHelp" placeholder="Enter the school name">
+      <label for="school">學校</label>
+      <select class="form-control" id="schoolU">
+          <option>School</option>
+          <?
+          $schoolSql = mysqli_query($conn, "SELECT * FROM cllsc.school_list;");
+          while ($schoolArr = mysqli_fetch_assoc($schoolSql)) {
+              echo '<option value="'.$schoolArr['Sid'].'">'.$schoolArr['cname'].'</option>';
+          }
+          ?>
+      </select>
   </div>
 
   <div class="form-group">
     <label for="centre">中心</label>
     <select class="form-control" id="centreU">
-      <option>Centre/School</option>
+      <option>Centre</option>
       <?
         $centreSql = mysqli_query($conn, "SELECT * FROM cllsc.centre_list;");
         while ($centreArr = mysqli_fetch_assoc($centreSql)) {
@@ -339,6 +358,7 @@
             class: $("#class").val(),
             classNo: $("#classNo").val(),
             school: $("#school").val(),
+            centre: $("#centre").val(),
             group: $("#group").val()
 
           },
@@ -374,7 +394,7 @@
                 $(e.currentTarget).find('select[id="genderU"]').val(data.gender);
                 $(e.currentTarget).find('input[id="classU"]').val(data.class);
                 $(e.currentTarget).find('input[id="classNoU"]').val(data.classNo);
-                $(e.currentTarget).find('input[id="schoolU"]').val(data.school);
+                $(e.currentTarget).find('select[id="schoolU"]').val(data.school);
                 $(e.currentTarget).find('select[id="centreU"]').val(data.centre);
                 $(e.currentTarget).find('select[id="groupU"]').val(data.group);
             }
@@ -392,6 +412,7 @@
                     class: $("#classU").val(),
                     classNo: $("#classNoU").val(),
                     school: $("#schoolU").val(),
+                    centre: $("#centreU").val(),
                     group: $("#groupU").val()
                 },
                 dataType: "json",
