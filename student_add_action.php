@@ -1,9 +1,9 @@
 <?php
 include("connect.php");
-$data=array($_POST['cname'], $_POST['ename'], $_POST['gender'], $_POST['class'], $_POST['classNo'], $_POST['school'], $_POST['group']);
+$data=array($_POST['cname'], $_POST['ename'], $_POST['gender'], $_POST['class'], $_POST['classNo'], $_POST['school'], $_POST['centre'], $_POST['group']);
 
-$gid = $data[6];
-$sql="INSERT INTO student_list (cname, ename, gender, class, class_num, school, gid) VALUES('$data[0]', '$data[1]', '$data[2]', '$data[3]', '$data[4]', '$data[5]', '$data[6]');";
+$gid = $data[7];
+$sql="INSERT INTO student_list (cname, ename, gender, class, class_num, school, cid, gid) VALUES('$data[0]', '$data[1]', '$data[2]', '$data[3]', '$data[4]', '$data[5]', '$data[6]', '$data[7]');";
 /*for($j=0;$j<count($fieldArr);$j++)
     $sql=$sql.", ".$fieldArr[$j];
 $sql=$sql.");";*/
@@ -16,7 +16,9 @@ if (mysqli_query($conn, $sql)){
 		$sql3 = "INSERT INTO att_list (sid, lid) VALUES($sid, $lid);";
 		if (mysqli_query($conn, $sql3)){
 			$data = array('message'=>'success');
-		}
+		}else{
+            $data = array('error'=>$sql3);
+        }
 		
 	}
 }else{

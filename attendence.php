@@ -129,7 +129,7 @@
                   <?
                     $total = 0;
                     while ($lessArr = mysqli_fetch_assoc($lessSql)){
-                        echo '<th colspan="2">'.$lessArr['ldate'].'</th>';
+                        echo '<th colspan="2"> <div id="date'.$lessArr['lid'].'" value="'.$lessArr['ldate'].'">'.$lessArr['ldate'].'</div></th>';
                       $total++;
                     }
                   ?>
@@ -193,8 +193,30 @@
                   }
                   ?>
               </tr>
+              <tr>
+                  <td> </td>
+                  <td> </td>
+                  <td> </td>
+                  <td> </td>
+                  <?
+                  $lessSql = mysqli_query($conn, "SELECT * FROM cllsc.lesson_list WHERE gid = $gid;");
+                  $cnt = 0;
+                  while ($lessArr = mysqli_fetch_assoc($lessSql)){
+                      echo '<td colspan=2 align="center">
+                                <email>
+                                    <button class="btn btn-primary" type="button" id="email_'.$cnt.'" value="'.$lessArr['lid'].'" class="btn">Email</button>
+                                </email>
+                            </td>';
+                      $cnt++;
+                  }
+                  ?>
+              </tr>
               </tbody>
             </table>
+            <div id="messages" class="hide" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <div id="messages_content"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -251,8 +273,16 @@
     <input type="text" class="form-control" id="classNo" aria-describedby="emailHelp" placeholder="Enter the class number">
   </div>
   <div class="form-group">
-    <label for="school">學校</label>
-    <input type="text" class="form-control" id="school" aria-describedby="emailHelp" placeholder="Enter the school name">
+      <label for="school">學校</label>
+      <select class="form-control" id="schoolU">
+          <option>School</option>
+          <?
+          $schoolSql = mysqli_query($conn, "SELECT * FROM cllsc.school_list;");
+          while ($schoolArr = mysqli_fetch_assoc($schoolSql)) {
+              echo '<option value="'.$schoolArr['Sid'].'">'.$schoolArr['cname'].'</option>';
+          }
+          ?>
+      </select>
   </div>
   <!--</br>
   <h4>語言背景</h4>
@@ -324,11 +354,11 @@
     <script type="text/javascript">
     // alert($(":checkbox:checked").length);
     var total_lesson = document.getElementById("att_table").rows[0].cells.length-4;
-    console.log(total_lesson);
+    //console.log(total_lesson);
     for (var i= 0; i<total_lesson; i++){
         var asdf = document.getElementById('total_'+i);
         var lid = asdf.getAttribute("value");
-        console.log(lid);
+        //console.log(lid);
         document.getElementById('total_'+i).innerHTML = $('input[name='+lid+']:checked').size();
     }
     
@@ -371,6 +401,7 @@
         console.log(x);
         if (x == "S"){
           console.log("This is Student")
+          var cid = "<?php echo $cid ?>";
           $.ajax({
             type: "POST",
             url: "student_add_action.php",
@@ -381,6 +412,7 @@
               class: $("#class").val(),
               classNo: $("#classNo").val(),
               school: $("#school").val(),
+              centre: cid,
               group: getID
             },
             dataType: "json",
@@ -419,33 +451,6 @@
           }
         }
       }
-      /*$("#submitD").click(function(e){
-        e.preventDefault();
-        conosole.log("submitD");
-        for (var i = countDate ; i >= 1; i--) {
-          console.log($("#inputDate"+i).val())
-        }
-        $.ajax({
-          type: "POST",
-          url: "date_lesson_add_action.php",
-          data: {
-            cname: $("#cname").val(),
-            ename: $("#ename").val(),
-            gender: $("#gender").val(),
-            class: $("#class").val(),
-            classNo: $("#classNo").val(),
-            school: $("#school").val(),
-            group: getID
-
-          },
-          dataType: "json",
-          success: function(data){
-            console.log(data);
-            $("#addStudent").modal('toggle');
-            //location.reload();
-          }
-        })
-      });*/
 
 
       //console.log(get);
@@ -478,6 +483,41 @@
             }
         });
     });
+
+    $('.table > tbody > tr > td > email > .btn').click(function(e){
+        var lid = $(this).val();
+        var p = ".table > thead > tr > th > #date" + lid;
+        var date = $(p).attr('value');
+        $.ajax({
+            type: 'POST',
+            url: '../automailing/gmail.php',
+            data: {
+                gid: getID,
+                lid: lid,
+                date: date,
+            },
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if(data['error'].length == 0 && data['success'].length != 0){
+                    $('#messages').removeClass('hide alert-danger').addClass('alert alert-success alert-dismissible').slideDown().show();
+                    var content = '<strong>Success!</strong> Emails successfully sent<br>Email Sent to:<br>';
+                    for(var i = 0; i < data['receiver_addr'].length; i++){
+                        content = content.concat(data['receiver_addr'][i]+' - '+data['receiver_name'][i]+'<br>');
+                    }
+                }else{
+                    $('#messages').removeClass('hide').addClass('alert alert-danger alert-dismissible').slideDown().show();
+                    var content = '<strong>Error!</strong> There is error during Email sending<br>Email Not Sent to:<br>';
+                    for(var i = 0; i < data['receiver_addr'].length; i++){
+                        content = content.concat(data['receiver_addr'][i]+' - '+data['receiver_name'][i]+'<br>');
+                    }
+                }
+                $('#messages_content').html(content);
+                $('#modal').modal('show');
+            }
+        })
+    });
+
     $('.table > tbody > tr > td > .btn').click(function(e){
         var id = $(this).attr('id');
         var lid = $(this).val();
