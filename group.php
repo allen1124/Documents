@@ -176,7 +176,7 @@
     <select class="form-control" id="tutor">
       <option>Teacher</option>
       <?
-        $centreSql = mysqli_query($conn, "SELECT * FROM cllsc.account WHERE access = '2';");
+        $centreSql = mysqli_query($conn, "SELECT * FROM cllsc.account WHERE access != '1';");
         while ($teacherArr = mysqli_fetch_assoc($centreSql)) {
         			if ($teacherArr['cname'] != null){
                     	echo '<option value="'.$teacherArr['username'].'">'.$teacherArr['cname'].'老師</option>';
@@ -244,7 +244,7 @@
     <select class="form-control" id="tutorU">
       <option>Teacher</option>
       <?
-        $centreSql = mysqli_query($conn, "SELECT * FROM cllsc.account WHERE access = '2';");
+        $centreSql = mysqli_query($conn, "SELECT * FROM cllsc.account WHERE access != '1';");
         while ($teacherArr = mysqli_fetch_assoc($centreSql)) {
         			if ($teacherArr['cname'] != null){
                     	echo '<option value="'.$teacherArr['username'].'">'.$teacherArr['cname'].'老師</option>';
