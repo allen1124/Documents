@@ -1,9 +1,9 @@
 <?php
 include("connect.php");
-$data=array($_POST['gid'], $_POST['venue'], $_POST['time'], $_POST['tutor'], $_POST['capacity'], $_POST['centre']);
+$data=array($_POST['gid'], $_POST['venue'], $_POST['time'], $_POST['tutor'], $_POST['enroll'], $_POST['centre']);
 
 //not finish
-$sql="UPDATE group_list SET `venue`='$data[1]', `time`='$data[2]', `tid`='$data[3]', `capacity`='$data[4]', `cid`='$data[5]' WHERE `gid`='$data[0]';";
+$sql="UPDATE group_list SET `venue`='$data[1]', `time`='$data[2]', `tid`='$data[3]', `enroll`='$data[4]', `cid`='$data[5]' WHERE `gid`='$data[0]';";
 /*for($j=0;$j<count($fieldArr);$j++)
     $sql=$sql.", ".$fieldArr[$j];
 $sql=$sql.");";*/

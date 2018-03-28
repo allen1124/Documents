@@ -190,8 +190,8 @@
     </select>
   </div>
   <div class="form-group">
-    <label for="capacity">Capacity</label>
-    <input class="form-control" type="number" value="20" id="capacity">
+    <label for="capacity">Enrolled</label>
+    <input class="form-control" type="number" value="0" id="enroll">
   </div>
 </form>
       </div>
@@ -258,8 +258,8 @@
     </select>
   </div>
   <div class="form-group">
-    <label for="capacity">Capacity</label>
-    <input class="form-control" type="number" value="20" id="capacityU">
+    <label for="capacity">Enrolled</label>
+    <input class="form-control" type="number" id="enrollU">
   </div>
   
 </form>
@@ -293,7 +293,7 @@
             venue: $("#venue").val(),
             time: $("#time").val(),
             tutor: $("#tutor").val(),
-            capacity: $("#capacity").val(),
+            enroll: $("#enroll").val(),
             centre: $("#centre").val()
 
           },
@@ -329,7 +329,7 @@
             $(e.currentTarget).find('input[id="venueU"]').val(data.venue);
             $(e.currentTarget).find('input[id="timeU"]').val(data.time);
             $(e.currentTarget).find('select[id="tutorU"]').val(data.tutor);
-            $(e.currentTarget).find('input[id="capacityU"]').val(data.capacity);
+            $(e.currentTarget).find('input[id="enrollU"]').val(data.enroll);
             
           }
         })
@@ -343,7 +343,7 @@
             venue: $("#venueU").val(),
             time: $("#timeU").val(),
             tutor: $("#tutorU").val(),
-            capacity: $("#capacityU").val(),
+            enroll: $("#enrollU").val(),
             centre: $("#centreU").val()
 
           },

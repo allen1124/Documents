@@ -9,7 +9,7 @@ $sql=$sql.");";*/
 $query = mysqli_query($conn, $sql);
 if (mysqli_num_rows($query)>0){
 	$Arr=mysqli_fetch_assoc($query);
-	$data = array('centre'=>$Arr['cid'], 'venue'=>$Arr['venue'], 'time'=>$Arr['time'], 'tutor'=>$Arr['tid'], 'capacity'=>$Arr['capacity']);
+	$data = array('centre'=>$Arr['cid'], 'venue'=>$Arr['venue'], 'time'=>$Arr['time'], 'tutor'=>$Arr['tid'], 'enroll'=>$Arr['enroll']);
 }else{
 	$data = array('error'=>$sql);
 }
