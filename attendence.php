@@ -107,14 +107,17 @@
               $getName = mysqli_query($conn, $sql);
               $schoolInfo = mysqli_fetch_assoc($getName);
               $tid = $infoArr['tid'];
-              $tsql = "SELECT * FROM cllsc.account WHERE username = '$tid';";
+              $tsql = "SELECT * FROM cllsc.account WHERE '$tid' LIKE CONCAT('%', username , '%');";
               $tName = mysqli_query($conn, $tsql);
-              $tutorName = mysqli_fetch_assoc($tName);
               echo '<div style ="font-size: 18px;">
               中心: &nbsp&nbsp&nbsp&nbsp'.$schoolInfo['cname'].'</br>
               課室：&nbsp&nbsp&nbsp'.$infoArr['venue'].'</br>
               時間：&nbsp&nbsp&nbsp'.$infoArr['time'].'</br>
-              導師：&nbsp&nbsp&nbsp'.$tutorName['cname'].'老師</br>
+              導師：&nbsp&nbsp&nbsp';
+                  while ($tutorName = mysqli_fetch_assoc($tName)){
+                      echo $tutorName['cname'].'老師 ';
+                  }
+                  echo '</br>
               </div></br>';
 
           ?>
@@ -490,7 +493,7 @@
         var date = $(p).attr('value');
         $.ajax({
             type: 'POST',
-            url: '../automailing/gmail.php',
+            url: 'gmail.php',
             data: {
                 gid: getID,
                 lid: lid,

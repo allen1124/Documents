@@ -94,23 +94,26 @@
           <h3 class="page-header">Group Attendence
               <button type="button" class="btn btn-info pull-right" onclick="location.href='teaching_log2.php?id=<? echo $gid;?>'">Upload Teaching Log</button>
           </h3>
-          <?  
+          <?
               $cid = $infoArr['cid'];
               $sql = "SELECT * FROM cllsc.centre_list WHERE cid = '$cid';";
               $getName = mysqli_query($conn, $sql);
               $schoolInfo = mysqli_fetch_assoc($getName);
               $tid = $infoArr['tid'];
-              $tsql = "SELECT * FROM cllsc.account WHERE username = '$tid';";
+              $tsql = "SELECT * FROM cllsc.account WHERE '$tid' LIKE CONCAT('%', username , '%');";
               $tName = mysqli_query($conn, $tsql);
-              $tutorName = mysqli_fetch_assoc($tName);
               echo '<div style ="font-size: 18px;">
               中心: &nbsp&nbsp&nbsp&nbsp'.$schoolInfo['cname'].'</br>
               課室：&nbsp&nbsp&nbsp'.$infoArr['venue'].'</br>
               時間：&nbsp&nbsp&nbsp'.$infoArr['time'].'</br>
-              導師：&nbsp&nbsp&nbsp'.$tutorName['cname'].'老師</br>
+              導師：&nbsp&nbsp&nbsp';
+            while ($tutorName = mysqli_fetch_assoc($tName)){
+                echo $tutorName['cname'].'老師 ';
+            }
+            echo '</br>
               </div></br>';
 
-          ?>
+            ?>
           <div class="table-responsive">
             <table id="att_table" class="table table-hover">
               <thead>

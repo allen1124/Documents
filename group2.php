@@ -3,7 +3,7 @@
   $table = "group_list";
   $tid = $_GET['tid'];
   if ($tid != null){
-    $mysql = mysqli_query($conn, "SELECT * FROM cllsc.$table WHERE tid = '$tid';");
+    $mysql = mysqli_query($conn, "SELECT * FROM cllsc.$table WHERE tid LIKE '%{$tid}%';");
   }else{
     $mysql = mysqli_query($conn, "SELECT * FROM cllsc.$table;");
   }
@@ -101,15 +101,18 @@
                     $getName = mysqli_query($conn, $sql);
                     $schoolName = mysqli_fetch_assoc($getName);
                     $tid = $infoArr['tid'];
-                    $tsql = "SELECT * FROM cllsc.account WHERE username = '$tid';";
+                    $tsql = "SELECT * FROM cllsc.account WHERE '$tid' LIKE CONCAT('%', username , '%');";
                     $tName = mysqli_query($conn, $tsql);
-                    $tutorName = mysqli_fetch_assoc($tName);
                     echo '<tr value="'.$infoArr['gid'].'">
                   <td>'.$infoArr['gid'].'</td>
                   <td>'.$schoolName['cname'].'</td>
                   <td>'.$infoArr['enroll'].'</td>
                   <td>'.$infoArr['venue'].'</td>
-                  <td>'.$tutorName['cname'].'老師</td>
+                  <td>';
+                      while ($tutorName = mysqli_fetch_assoc($tName)){
+                          echo $tutorName['cname'].'老師 ';
+                      }
+                      echo '</td>
                   <td>'.$infoArr['time'].'</td>
                 </tr>';
 
